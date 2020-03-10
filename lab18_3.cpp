@@ -39,7 +39,7 @@ void printreport(vector<course> allcourses){
 		cout << "\n\nStudents:\t";
 		for(unsigned int j = 0; j < allcourses[i].student_list.size();j++){
 			if(j != 0) cout << "\t\t";
-			cout << setw(15) << left << allcourses[i].student_list[j]->name << "\t";
+			cout << setw(20) << left << allcourses[i].student_list[j]->name << "\t";
 			cout << allcourses[i].student_list[j]->id << "\t";
 			cout << allcourses[i].student_list[j]->gender << "\t";
 			cout << allcourses[i].student_list[j]->gpa << "\n";
@@ -93,6 +93,7 @@ int main(){
 				state = 1;
 				allcourses.push_back(c);
 				c.lecture_list = {};
+				c.student_list = {};
 			}else{
 				student *p = findstudent(allstudents,atoi(textline.c_str()));
 				c.student_list.push_back(p);
