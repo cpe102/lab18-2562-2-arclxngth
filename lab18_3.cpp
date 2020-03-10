@@ -8,7 +8,10 @@
 using namespace std;
 
 struct student{
-	//Define struct student with four member (name ,id , gender, gpa);
+	string name;	
+	int id;
+	char gender;
+	float gpa;
 };
 
 struct course{
@@ -18,7 +21,7 @@ struct course{
 	vector<student *> student_list;
 };
 
-student * findstudent(vector<student> allstudents,int key){ //Correct this line
+student * findstudent(vector<student> &allstudents,int key){ //Correct this line
 	for(unsigned int i = 0; i < allstudents.size(); i++){
 		if(allstudents[i].id  == key) return &allstudents[i];
 	}
@@ -47,43 +50,52 @@ void printreport(vector<course> allcourses){
 }
 
 int main(){
-	ifstream student_file("students.txt");
-	ifstream course_file("courses.txt");
+
+	ifstream student_file("C:\\Users\\acer\\Documents\\GitHub\\lab18-2562-2-arclxngth\\students.txt");
+	ifstream course_file("C:\\Users\\acer\\Documents\\GitHub\\lab18-2562-2-arclxngth\\courses.txt");
 	vector<student> allstudents;
 	vector<course> allcourses;
 	
 	string textline;
 	
 	while(getline(student_file,textline)){
-		student s; 
-	
-		//Assign value to the members of struct s;
+
+		char name[100];
+		char gender;
+		float gpa;
+		int id;
+
+		sscanf(textline.c_str(),"%[^,],%d,%c,%f",name,&id,&gender,&gpa);
+
+		student s = {name,id,gender,gpa};
 	
 		allstudents.push_back(s); 		
 	}
-	
+
 	int state = 1;
+	course c;
+
 	while(getline(course_file,textline)){
 		if(state == 1){
-			course c;
 			int loc = textline.find_first_of('(');
 			c.name = textline.substr(0,loc-1);
 			c.id = atof(textline.substr(loc+1,5).c_str());
 			getline(course_file,textline);
-			allcourses.push_back(c);
 			state = 2;			
 		}else if(state == 2){
 			if(textline == "> Students"){
 				state = 3;
 			}else{
-				//Append lecture_list;
+				c.lecture_list.push_back(textline);
 			}			
 		}else{
 			if(textline == "---------------------------------------"){
 				state = 1;
+				allcourses.push_back(c);
+				c.lecture_list = {};
 			}else{
-				student *p = findstudent(allstudents,atof(textline.c_str()));
-				//Append student_list;
+				student *p = findstudent(allstudents,atoi(textline.c_str()));
+				c.student_list.push_back(p);
 			}
 		}
 	}
